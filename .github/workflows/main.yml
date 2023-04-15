@@ -26,7 +26,7 @@ jobs:
         run: |
           git merge --allow-unrelated-histories --no-commit --no-ff ${{ github.ref }}
           if [ $? -ne 0 ]; then
-            git status --porcelain | grep '^U ' | sed -e 's/^U //g' | xargs -n1 git checkout --theirs
+            git status --porcelain | grep '^U ' | sed -e 's/^U //g' | xargs -n1 git checkout --ours
             git add .
           fi
           git commit -m "Automatic merge"
