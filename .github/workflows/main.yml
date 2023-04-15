@@ -20,4 +20,4 @@ jobs:
           git fetch upstream
           git merge --no-commit --no-ff ${{ github.ref }}
           git commit -m "Merge changes from source branch into c"
-          git push origin c
+          git push upstream c
