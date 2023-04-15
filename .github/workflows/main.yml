@@ -12,6 +12,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      - name: Set Job-specific Git Account
+        run: |
+          git config user.email "you@example.com"
+          git config user.name "Your Name"
       - name: Merge changes from source branch into c
         run: |
           git remote add upstream https://github.com/tsusk8/auto_pull.git
