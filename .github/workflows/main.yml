@@ -30,7 +30,25 @@ jobs:
           git checkout c
           git pull --no-commit upstream c
 
-      - name: Merge A and B into C
+      - name: Merge A into C
+        run: |
+          git merge --allow-unrelated-histories --no-commit a
+
+      - name: Continue merge if conflict occurs
+        run: git merge --continue
+        if: ${{ env.HAS_CONFLICTS == 'true' }}
+
+      - name: Check merge status
+        run: |
+          git status
+          echo "HAS_CONFLICTS=true" >> $GITHUB_ENV
+        if: ${{ contains(github.event.head_commit.message, 'merge') }}
+
+      - name: Delete MERGE_HEAD file
+        run: rm .git/MERGE_HEAD
+        if: ${{ env.HAS_CONFLICTS == 'true' }}
+      
+      - name: Merge B into C
         run: |
           git merge --allow-unrelated-histories --no-commit a
           git merge --allow-unrelated-histories --no-commit b
