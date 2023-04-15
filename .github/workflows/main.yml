@@ -32,8 +32,8 @@ jobs:
 
       - name: Merge A and B into C
         run: |
-          git merge a
-          git merge b
+          git merge --allow-unrelated-histories --no-commit a
+          git merge --allow-unrelated-histories --no-commit b
 
       - name: Continue merge if conflict occurs
         run: git merge --continue
