@@ -21,11 +21,14 @@ jobs:
     
       - name: Checkout A and B Branches
         run: |
+          git remote add upstream https://github.com/tsusk8/auto_pull.git
+          git fetch upstream
           git checkout a
-          git pull origin a
+          git pull --no-commit upstream a
           git checkout b
-          git pull origin b
+          git pull --no-commit upstream b
           git checkout c
+          git pull --no-commit upstream c
 
       - name: Merge A and B into C
         run: |
