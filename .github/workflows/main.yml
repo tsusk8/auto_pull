@@ -13,6 +13,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: Merge A and B into C
       run: |
+        git config --global user.email "you@example.com"
+        git config --global user.name "Your Name"
         git remote add upstream https://github.com/tsusk8/auto_pull.git
         git fetch upstream
         git checkout a
