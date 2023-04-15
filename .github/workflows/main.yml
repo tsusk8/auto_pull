@@ -3,7 +3,7 @@ name: Update target branch with changes from source branch
 on:
   push:
     branches:
-      - source_branch
+      - c
 
 jobs:
   update_target_branch:
@@ -15,6 +15,6 @@ jobs:
           ref: target_branch
       - name: Merge changes from source branch into target branch
         run: |
-          git merge --no-commit --no-ff origin/source_branch
+          git merge --no-commit --no-ff origin/c
           git commit -m "Merge changes from source branch into target branch"
           git push origin target_branch
