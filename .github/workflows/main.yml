@@ -17,4 +17,4 @@ jobs:
         git merge --allow-unrelated-histories --no-commit a
         git merge --allow-unrelated-histories --no-commit b
         git commit -m "Merge A and B into C"
-        git push
+        git push --allow-unrelated-histories
