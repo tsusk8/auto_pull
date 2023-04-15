@@ -13,9 +13,19 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      - name: Checkout to C branch
-        run: git checkout c
+      
+      - name: Set Job-specific Git Account
+        run: |
+          git config user.email "you@example.com"
+          git config user.name "Your Name"
+    
+      - name: Checkout A and B Branches
+        run: |
+          git checkout a
+          git pull origin a
+          git checkout b
+          git pull origin b
+          git checkout c
 
       - name: Merge A and B into C
         run: |
@@ -36,13 +46,4 @@ jobs:
         run: rm .git/MERGE_HEAD
         if: ${{ env.HAS_CONFLICTS == 'true' }}
 
-      - name: Commit merge changes
-        run: git commit -m "Merge A and B into C"
-        if: ${{ env.HAS_CONFLICTS != 'true' }}
-
-      - name: Push changes to remote branch
-        uses: ad-m/github-push-action@master
-        with:
-          branch: c
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-        if: ${{ env.HAS_CONFLICTS != 'true' }}
+     
