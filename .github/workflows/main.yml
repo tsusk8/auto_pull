@@ -19,20 +19,16 @@ jobs:
           git config user.email "you@example.com"
           git config user.name "Your Name"
     
-      - name: Checkout A and B Branches
+      - name: Fetch and Checkout Target Branch
         run: |
           git remote add upstream https://github.com/tsusk8/auto_pull.git
           git fetch upstream
-          git checkout a
-          git pull --no-commit upstream a
-          git checkout b
-          git pull --no-commit upstream b
           git checkout c
           git pull --no-commit upstream c
 
       - name: Merge A into C
         run: |
-          git merge --allow-unrelated-histories --no-commit a
+          git merge --allow-unrelated-histories --no-commit ${{ github.ref }}
 
       - name: Continue merge if conflict occurs
         run: git merge --continue
@@ -47,23 +43,3 @@ jobs:
       - name: Delete MERGE_HEAD file
         run: rm .git/MERGE_HEAD
         if: ${{ env.HAS_CONFLICTS == 'true' }}
-      
-      - name: Merge B into C
-        run: |
-          git merge --allow-unrelated-histories --no-commit b
-
-      - name: Continue merge if conflict occurs
-        run: git merge --continue
-        if: ${{ env.HAS_CONFLICTS == 'true' }}
-
-      - name: Check merge status
-        run: |
-          git status
-          echo "HAS_CONFLICTS=true" >> $GITHUB_ENV
-        if: ${{ contains(github.event.head_commit.message, 'merge') }}
-
-      - name: Delete MERGE_HEAD file
-        run: rm .git/MERGE_HEAD
-        if: ${{ env.HAS_CONFLICTS == 'true' }}
-
-     
