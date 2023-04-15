@@ -1,0 +1,22 @@
+name: Pull Request on Push
+
+on:
+  push:
+    branches:
+      - master # 特定のブランチ名を指定
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Pull changes from main
+      run: |
+        git remote add upstream https://github.com/OWNER/REPOSITORY.git
+        git fetch upstream
+        git checkout main
+        git pull upstream main
+        git push origin main
