@@ -12,12 +12,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-        with:
-          ref: c
       - name: Merge changes from source branch into c
         run: |
           git remote add upstream https://github.com/tsusk8/auto_pull.git
           git fetch upstream
-          git merge --no-commit --no-ff ${{ github.ref }}
+          git checkout c
+          git pull --no-commit upstream c
+          git merge --allow-unrelated-histories --no-commit ${{ github.ref }}
           git commit -m "Merge changes from source branch into c"
           git push origin c
