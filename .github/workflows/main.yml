@@ -1,4 +1,4 @@
-name: Update C on Push to A or B
+name: Merge A and B into C
 
 on:
   push:
@@ -7,28 +7,42 @@ on:
       - b
 
 jobs:
-  update-c:
+  merge:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v2
-    - name: Merge A and B into C
-      run: |
-        git config --global user.email "you@example.com"
-        git config --global user.name "Your Name"
-        git remote add upstream https://github.com/tsusk8/auto_pull.git
-        git fetch upstream
-        git checkout a
-        git pull --no-commit upstream a
-        sleep 2
-        git checkout b
-        git pull --no-commit upstream b
-        sleep 2
-        git checkout c
-        git pull --no-commit upstream c
-        sleep 2
-        git merge --allow-unrelated-histories --no-commit a
-        sleep 2
-        git merge --allow-unrelated-histories --no-commit b
-        sleep 2
-        git commit -m "Merge A and B into C"
-        git push --allow-unrelated-histories
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Checkout to C branch
+        run: git checkout c
+
+      - name: Merge A and B into C
+        run: |
+          git merge a
+          git merge b
+
+      - name: Continue merge if conflict occurs
+        run: git merge --continue
+        if: ${{ env.HAS_CONFLICTS == 'true' }}
+
+      - name: Check merge status
+        run: |
+          git status
+          echo "HAS_CONFLICTS=true" >> $GITHUB_ENV
+        if: ${{ contains(github.event.head_commit.message, 'merge') }}
+
+      - name: Delete MERGE_HEAD file
+        run: rm .git/MERGE_HEAD
+        if: ${{ env.HAS_CONFLICTS == 'true' }}
+
+      - name: Commit merge changes
+        run: git commit -m "Merge A and B into C"
+        if: ${{ env.HAS_CONFLICTS != 'true' }}
+
+      - name: Push changes to remote branch
+        uses: ad-m/github-push-action@master
+        with:
+          branch: c
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+        if: ${{ env.HAS_CONFLICTS != 'true' }}
