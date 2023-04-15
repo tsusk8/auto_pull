@@ -3,7 +3,8 @@ name: Pull Request on Push
 on:
   push:
     branches:
-      - master # 特定のブランチ名を指定
+      - a
+      - b
 
 jobs:
   build:
@@ -13,10 +14,17 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Pull changes from main
+    - name: Pull changes from a and b
       run: |
         git remote add upstream https://github.com/tsusk8/auto_pull.git
         git fetch upstream
-        git checkout main
-        git pull upstream main
-        git push origin main
+        git checkout a
+        git pull --no-commit upstream a
+        git checkout b
+        git pull --no-commit upstream b
+        git push origin a b
+        git checkout c
+        git merge --no-commit a
+        git merge --no-commit b
+        git commit -m "Merge a and b"
+        git push origin c
