@@ -14,7 +14,7 @@ jobs:
     - name: Merge A and B into C
       run: |
         git checkout c
-        git merge --no-commit a
-        git merge --no-commit b
+        git merge --allow-unrelated-histories --no-commit a
+        git merge --allow-unrelated-histories --no-commit b
         git commit -m "Merge A and B into C"
         git push
