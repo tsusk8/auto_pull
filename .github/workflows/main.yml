@@ -19,11 +19,16 @@ jobs:
         git fetch upstream
         git checkout a
         git pull --no-commit upstream a
+        sleep 2
         git checkout b
         git pull --no-commit upstream b
+        sleep 2
         git checkout c
         git pull --no-commit upstream c
+        sleep 2
         git merge --allow-unrelated-histories --no-commit a
+        sleep 2
         git merge --allow-unrelated-histories --no-commit b
+        sleep 2
         git commit -m "Merge A and B into C"
         git push --allow-unrelated-histories
