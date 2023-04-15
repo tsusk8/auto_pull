@@ -1,45 +1,20 @@
-name: Merge A and B into C
+name: Update target branch with changes from source branch
 
 on:
   push:
     branches:
-      - a
-      - b
+      - source_branch
 
 jobs:
-  merge:
+  update_target_branch:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      
-      - name: Set Job-specific Git Account
+        with:
+          ref: target_branch
+      - name: Merge changes from source branch into target branch
         run: |
-          git config user.email "you@example.com"
-          git config user.name "Your Name"
-    
-      - name: Fetch and Checkout Target Branch
-        run: |
-          git remote add upstream https://github.com/tsusk8/auto_pull.git
-          git fetch upstream
-          git checkout c
-          git pull --no-commit upstream c
-
-      - name: Merge A into C
-        run: |
-          git merge --allow-unrelated-histories --no-commit ${{ github.ref }}
-
-      - name: Continue merge if conflict occurs
-        run: git merge --continue
-        if: ${{ env.HAS_CONFLICTS == 'true' }}
-
-      - name: Check merge status
-        run: |
-          git status
-          echo "HAS_CONFLICTS=true" >> $GITHUB_ENV
-        if: ${{ contains(github.event.head_commit.message, 'merge') }}
-
-      - name: Delete MERGE_HEAD file
-        run: rm .git/MERGE_HEAD
-        if: ${{ env.HAS_CONFLICTS == 'true' }}
+          git merge --no-commit --no-ff origin/source_branch
+          git commit -m "Merge changes from source branch into target branch"
+          git push origin target_branch
