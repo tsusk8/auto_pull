@@ -3,18 +3,19 @@ name: Update target branch with changes from source branch
 on:
   push:
     branches:
-      - c
+      - a
+      - b
 
 jobs:
-  update_target_branch:
+  update_c:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          ref: target_branch
-      - name: Merge changes from source branch into target branch
+          ref: c
+      - name: Merge changes from source branch into c
         run: |
-          git merge --no-commit --no-ff origin/c
-          git commit -m "Merge changes from source branch into target branch"
-          git push origin target_branch
+          git merge --no-commit --no-ff origin/${{ github.ref }}
+          git commit -m "Merge changes from source branch into c"
+          git push origin c
